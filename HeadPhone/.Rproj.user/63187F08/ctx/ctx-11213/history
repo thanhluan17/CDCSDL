@@ -1,0 +1,98 @@
+#install library
+install.packages('xml2')
+install.packages('rvest')
+install.packages("writexl")
+install.packages('selectr')
+install.packages("xlsx")
+install.packages("magrittr")
+install.packages("dplyr")
+#loading the package
+library(xml2)
+library(rvest)
+library(writexl)
+library(stringr)
+library(xlsx)
+library(magrittr)
+library(dplyr)
+url <- 'https://tainghe.com.vn/tai-nghe.html'
+homepage <- read_html(url)
+category_html <- html_nodes(homepage, xpath="/html/body/div[3]/div[5]/div[1]/div[4]/div[1]/ul[1]/li/a")
+categories <- html_text(category_html)
+categoryName <-c()
+categoryId <-c()
+LoaiSanPham <- data.frame(categoryId, categoryName)
+i<-1
+for (name in categories){
+categoryName <-c(name)
+categoryId <- c(str_c("TYPE",i))
+temp <- data.frame(categoryId, categoryName)
+LoaiSanPham <- rbind(LoaiSanPham,temp)
+i<-i+1
+}
+brand_html <- html_nodes(homepage, xpath="/html/body/div[3]/div[5]/div[1]/div[4]/div[1]/ul[2]/li/a")
+brands <- html_text(brand_html)
+brandName <-c()
+brandId <-c()
+NhanHieu <- data.frame(brandId, brandName)
+i<-1
+for (name in brands){
+brandName <-c(name)
+brandId <- c(str_c("BRAND",i))
+temp <- data.frame(brandId, brandName)
+NhanHieu <- rbind(NhanHieu,temp)
+i<-i+1
+}
+productName<- html_text(html_nodes(homepage,"a.p-name"))
+TenSP <- data.frame(productId)
+productId <- c()
+productName<- html_text(html_nodes(homepage,"a.p-name"))
+productId <- c()
+TenSP <- data.frame(productId)
+MaSP <- data.frame(productId)
+i<-1
+for(product in productName){
+productId <- c(str_c("PRODUCT",i))
+temp <- data.frame(productId)
+MaSP <- rbind(MaSP,temp)
+i<-i+1
+}
+price<- html_text(html_nodes(homepage,"span.p-price"))
+price <- str_replace_all(price, "[[:punct:]]" , "")
+price<- str_sub(price,1,str_length(price)-1)
+GiaSP <- data.frame(price)
+products_html <- html_nodes(homepage, "li.item")
+images <-c()
+for(x in products_html){
+for(x in products_html){
+image <- html_nodes(homepage, xpath="/html/body/div[3]/div[5]/div[1]/section/div[4]/ul/li/div[2]/a[1]/img")%>%html_attr("src")
+if (length(image) > 0)
+image <-c(str_c("https://tainghe.com.vn/",image))
+else
+image<-"null"
+images <- c(images,image)
+}
+HinhAnh <- data.frame(images)
+SanPham <- data.frame(productId = MaSP, productName = productName, price = price, Hinhanh = images)
+write.xlsx(SanPham,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="SanPham",append=TRUE)
+write.xlsx(LoaiSanPham,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="LoaiSanPham",append=TRUE)
+write.xlsx(NhanHieu,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="NhanHieu",append=TRUE)
+write.xlsx(SanPham,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="SanPham",append=TRUE)
+write.xlsx(LoaiSanPham,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="LoaiSanPham",append=TRUE)
+write.xlsx(NhanHieu,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="NhanHieu",append=TRUE)
+write.xlsx(SanPham,file= "D:\\HOCTAP\\220\\ChuyenDeCSDL\\R\\HeadPhone\\ScrappedData.xlsx",sheetName="SanPham",append=TRUE)
+#loading the package
+library(xml2)
+library(rvest)
+library(writexl)
+library(stringr)
+library(xlsx)
+library(magrittr)
+library(dplyr)
+library(tidyverse)
+library(rebus)
+library(lubridate)
+#install library
+install.packages('xml2')
+install.packages('rvest')
+install.packages("writexl")
+install.packages('selectr')
